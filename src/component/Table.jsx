@@ -2,7 +2,7 @@ import React from "react";
 import { cryptocurrencyList } from "../cryptocurrency-list";
 
 
-function Table({ coins, showNA }) {
+function Table({ coins, hasError }) {
   return (
     <div className="card card-text mt-10 mx-4">
       <table className="mb-0">
@@ -14,20 +14,26 @@ function Table({ coins, showNA }) {
           </tr>
         </thead>
         <tbody data-testid="exchange-data">
-          {cryptocurrencyList.map((data, idx) => (
-            <tr key={data.code}>
-              <td>{data.name}</td>
-              <td>{`1 USD = ${data.rate}`}</td>
-              <td>
-                {/* {showNA?"n/a" : coins[idx] ? coins[idx].toFixed(6) : "0.00000000" } */}
-                {showNA
-                  ? "n/a"
-                  : coins[idx] !== undefined && !isNaN(coins[idx])
-                  ? coins[idx].toFixed(8)
-                  : "0.00000000"}
-              </td>
-            </tr>
-          ))}
+          {cryptocurrencyList.map((currency) => {
+            return (
+              <tr key={currency.code}>
+                <td>{currency.name}</td>
+                <td>
+                  1 USD ={" "}
+                  {coins === ""
+                    ? Number(0.0).toFixed(8)
+                    : `${currency.rate} ${currency.code}`}{" "}
+                </td>
+                <td>
+                  {hasError
+                    ? "n/a"
+                    : coins === ""
+                    ? "0.00000000"
+                    : Number((coins * currency.rate).toFixed(8))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
